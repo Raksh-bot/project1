@@ -5,15 +5,9 @@ pipeline {
 
         stage('Debug') {
             steps {
-                sh 'echo "Pipeline started"'
+                echo 'Pipeline started'
                 sh 'node -v'
                 sh 'npm -v'
-            }
-        }
-
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/Raksh-bot/project1.git'
             }
         }
 
