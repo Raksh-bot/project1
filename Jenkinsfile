@@ -3,6 +3,14 @@ pipeline {
 
     stages {
 
+        stage('Debug') {
+            steps {
+                sh 'echo "Pipeline started"'
+                sh 'node -v'
+                sh 'npm -v'
+            }
+        }
+
         stage('Checkout') {
             steps {
                 git 'https://github.com/Raksh-bot/project1.git'
@@ -26,10 +34,9 @@ pipeline {
                 withSonarQubeEnv('sonarqube') {
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                         sh '''
-                        npx sonar-scanner \
+                        sonar-scanner \
                         -Dsonar.projectKey=node-app \
                         -Dsonar.sources=. \
-                        -Dsonar.host.url=http://localhost:9000 \
                         -Dsonar.login=$SONAR_TOKEN
                         '''
                     }
@@ -39,4 +46,3 @@ pipeline {
 
     }
 }
-//trigger buil
