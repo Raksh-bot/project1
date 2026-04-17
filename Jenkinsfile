@@ -36,7 +36,7 @@ pipeline {
         }
         stage('Docker build'){
             steps {
-                sh 'docker build -t node-app:latest.'
+                sh 'docker build -t node-app:latest .'
             }
         }
     }
