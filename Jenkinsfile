@@ -39,6 +39,11 @@ pipeline {
                 sh 'docker build -t node-app:latest .'
             }
         }
+        stage('trivy'){
+            steps{
+                sh 'trivy image node-app:latest'
+            }
+        }
     }
 }
 
