@@ -2,10 +2,11 @@ pipeline {
     agent any
 
     stages {
-        stage('Test Stage') {
+        stage('Debug') {
             steps {
                 echo 'Pipeline is working'
-                sh 'echo Hello from Jenkins'
+                sh 'node -v'
+                sh 'npm -v'
             }
         }
     }
