@@ -34,6 +34,11 @@ pipeline {
                 }
             }
         }
+        stage('Docker build'){
+            step{
+                sh 'docker build -t node-app:latest.'
+            }
+        }
     }
 }
 //er
