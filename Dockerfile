@@ -17,21 +17,13 @@ RUN npm run build
 
 
 # ---------- Stage 2: Production ----------
-FROM node:20-alpine
+# ---------- Stage 2: Production ----------
+FROM nginx:alpine
 
-WORKDIR /app
+# Copy built files
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Set environment
-ENV NODE_ENV=production
-ENV PORT=3000
+# Expose default nginx port
+EXPOSE 80
 
-# Copy only necessary files from builder
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-
-# Expose application port
-EXPOSE 3000
-
-# Start application
-CMD ["npm", "start"]
+CMD ["nginx", "-g", "daemon off;"]
