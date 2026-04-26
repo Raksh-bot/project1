@@ -1,6 +1,9 @@
 pipeline {
     agent any
-
+environment{
+    IMAGE_NAME = "raksh100/node-app"
+    IMAGE_TAG = "v${BUILD_NUMBER}"
+}
     stages {
         stage('Debug') {
             steps {
@@ -17,7 +20,7 @@ pipeline {
         stage('Build')
         {
             steps{
-                sh 'npm run build || echo "No build step defined"'
+                sh 'npm run build'
             }
         }
         stage('SonarQube Scan') {
@@ -36,20 +39,31 @@ pipeline {
         }
         stage('Docker build'){
             steps {
-                sh 'docker build -t node-app:v4 .'
+                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
+            }
+        }
+        stage('Docker Login') { 
+            steps { 
+                withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) { 
+                    sh 'echo $PASS | docker login -u $USER --password-stdin' } 
+            } 
+        }
+         stage('Docker build'){
+            steps {
+                sh 'docker push ${IMAGE_NAME}:${IMAGE_TAG}'
             }
         }
         stage('trivy'){
             steps{
-                sh 'trivy image node-app:v4'
+                sh 'trivy image ${IMAGE_NAME}:${IMAGE_TAG}'
             }
         }
         stage('Deploy to AKS') {
             steps{
                 sh '''
                 helm upgrade --install node-app /home/azuser/node-app \
-                --set image.repository=raksh100/node-app \
-                --set image.tag=''' + IMAGE_TAG + ''' \
+                --set image.repository=${IMAGE_NAME} \
+                --set image.tag=${IMAGE_TAG} \
                 --set image.pullPolicy=Always
                 '''
            }
