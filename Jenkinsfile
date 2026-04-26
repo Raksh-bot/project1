@@ -1,7 +1,6 @@
 pipeline {
 agent any
 
-```
 environment {
     IMAGE_NAME = "raksh100/node-app"
     IMAGE_TAG = "v${BUILD_NUMBER}"
@@ -81,6 +80,6 @@ stages {
         }
     }
 }
-```
+
 
 }
