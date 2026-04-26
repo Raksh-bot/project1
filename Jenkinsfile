@@ -45,15 +45,15 @@ pipeline {
             }
         }
         stage('Deploy to AKS') {
-    steps {
-        sh '''
-        helm upgrade --install node-app ~/node-app \
-        --set image.repository=raksh100/node-app \
-        --set image.tag=v4
-        --set image.pullPolicy=Always
-        '''
-    }
-}
+            steps{
+                sh '''
+                helm upgrade --install node-app /home/azuser/node-app \
+                --set image.repository=raksh100/node-app \
+                --set image.tag=''' + IMAGE_TAG + ''' \
+                --set image.pullPolicy=Always
+                '''
+           }
+        }
     }
 }
 
