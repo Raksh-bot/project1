@@ -36,14 +36,24 @@ pipeline {
         }
         stage('Docker build'){
             steps {
-                sh 'docker build -t node-app:latest .'
+                sh 'docker build -t node-app:v4 .'
             }
         }
         stage('trivy'){
             steps{
-                sh 'trivy image node-app:latest'
+                sh 'trivy image node-app:v4'
             }
         }
+        stage('Deploy to AKS') {
+    steps {
+        sh '''
+        helm upgrade --install node-app ~/node-app \
+        --set image.repository=raksh100/node-app \
+        --set image.tag=v4
+        --set image.pullPolicy=Always
+        '''
+    }
+}
     }
 }
 
